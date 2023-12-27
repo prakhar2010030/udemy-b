@@ -3,16 +3,19 @@ import dotenv from "dotenv";
 import courseRouter from "./routes/courseRoutes.js";
 import userRouter from "./routes/userRoutes.js";
 import errorMiddleware from "./middlewares/Error.js";
-
+import cookieParser from "cookie-parser";
 export const app = express();
 
 // middlewares
 app.use(express.json());
+
 app.use(
   express.urlencoded({
     extended: true,
   })
 );
+
+app.use(cookieParser());
 
 // routes
 app.use("/api/course", courseRouter);

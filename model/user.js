@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import validator from "validator";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-
+import crypto from "crypto";
 const userShcema = new mongoose.Schema({
   name: {
     type: String,
@@ -24,7 +24,7 @@ const userShcema = new mongoose.Schema({
   role: {
     type: String,
     enum: ["admin", "user"],
-    dafault: "user",
+    default: "user",
   },
   subscription: {
     type: String,
@@ -72,8 +72,20 @@ userShcema.methods.getJWTToken = function () {
     expiresIn: "15d",
   });
 };
+
 userShcema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
+};
+userShcema.methods.getResetToken =  function () {
+  const resetToken = crypto.randomBytes(20).toString("hex");
+
+  this.ResetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  this.ResetPasswordExpire = Date.now() + 15 * 60 * 1000;
+
+  return resetToken;
 };
 
 export const User = mongoose.model("User", userShcema);
