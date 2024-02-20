@@ -27,7 +27,7 @@ const userShcema = new mongoose.Schema({
     default: "user",
   },
   subscription: {
-    type: String,
+    id: String,
     status: String,
   },
   avatar: {
@@ -76,6 +76,7 @@ userShcema.methods.getJWTToken = function () {
 userShcema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
+
 userShcema.methods.getResetToken =  function () {
   const resetToken = crypto.randomBytes(20).toString("hex");
 

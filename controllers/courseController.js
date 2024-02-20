@@ -1,4 +1,3 @@
-import { isValidObjectId } from "mongoose";
 import catchAsyncError from "../middlewares/catchAsyncError.js";
 import { Course } from "../model/course.js";
 import ErrorHandler from "../utils/errorHandler.js";
@@ -82,14 +81,14 @@ export const addLecture = catchAsyncError(async (req, res, next) => {
       url: myCloud.secure_url,
     },
   });
-  console.log({
-    title,
-    description,
-    video: {
-      public_id: myCloud.public_id,
-      url: myCloud.secure_url,
-    },
-  });
+  // console.log({
+  //   title,
+  //   description,
+  //   video: {
+  //     public_id: myCloud.public_id,
+  //     url: myCloud.secure_url,
+  //   },
+  // });
 
   course.numOfVideos = course.lectures.length;
 
@@ -125,6 +124,7 @@ export const deleteCourse = catchAsyncError(async (req, res, next) => {
     message: "course deleted succesfully",
   });
 });
+
 export const deleteLecture = catchAsyncError(async (req, res, next) => {
   const { courseId, lectureId } = req.query;
 
