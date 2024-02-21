@@ -1,7 +1,9 @@
 import { app } from "./app.js";
 import { connectDb } from "./configurations/connection.js";
+import {Stats} from './model/stats.js'
 import cloudinary from "cloudinary";
 import Razorpay from "razorpay";
+import nodeCron from 'node-cron';
 
 connectDb(); //db connection
 
@@ -15,6 +17,17 @@ cloudinary.v2.config({
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET_KEY,
 });
+
+//(sec min hrs day month year) runs a task
+nodeCron.schedule("0 0 0 1 * *",async()=>{
+  try {
+    await Stats.create({})
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running at port: ${process.env.PORT}`);

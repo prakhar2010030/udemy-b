@@ -5,8 +5,10 @@ import sendToken from "../utils/sendToken.js";
 import { sendEmail } from "../utils/sendEmail.js";
 import crypto from "crypto";
 import { Course } from "../model/course.js";
+import { Stats } from "../model/stats.js";
 import getDataUri from "../utils/dataUri.js";
 import cloudinary from "cloudinary";
+import { stat } from "fs";
 
 export const register = catchAsyncError(async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -308,4 +310,18 @@ export const deleteUser = catchAsyncError(async (req, res, next) => {
     success: true,
     message: "User deleted successfully",
   });
+});
+
+//adding watchers
+
+User.watch().on("change", async () => {
+  const stats = await Stats.find({}).sort({ createdAt: "desc" }).limit(1);
+
+  const subscription = await User.find({ "subscription.status": "active" });
+
+  stats[0].users = await User.countDocuments();
+  stats[0].subscriptions = subscription.length;
+  stats[0].createdAt = new Date(Date.now());
+
+  await stats[0].save();
 });
