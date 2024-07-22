@@ -77,7 +77,7 @@ userShcema.methods.comparePassword = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-userShcema.methods.getResetToken =  function () {
+userShcema.methods.getResetToken = function () {
   const resetToken = crypto.randomBytes(20).toString("hex");
 
   this.ResetPasswordToken = crypto
